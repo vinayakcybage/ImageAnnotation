@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="css/annotorious.css" />
+    <script type="text/javascript" src="js/annotorious.js"></script>
+
+</head>
+<body>
+    <script type="text/javascript">
+
+        function Load() {
+            var annotation = JSON.parse('{"src":"https://localhost:5001/Example.jfif","text":"Test1 Test1 Test1 ","shapes":[{"type":"rect","geometry":{"x":0.133,"y":0.16541353383458646,"width":0.295,"height":0.3233082706766917},"style":{}}],"context":"https://localhost:5001/Demo.html", "ReadOnly":"true"}'.replace(/'/g, "\""));
+        
+            anno.addAnnotation(annotation);
+            
+            //var annotation2 = JSON.parse('{"src":"https://localhost:5001/Example2.jpg","text":"Test1 Test1 Test1 ","shapes":[{"type":"rect","geometry":{"x":0.133,"y":0.16541353383458646,"width":0.295,"height":0.3233082706766917},"style":{}}],"context":"https://localhost:5001/demo.html"}'.replace(/'/g, "\""));
+            //anno.addAnnotation(annotation2);
+
+            var annotation3 = JSON.parse('{ "src": "https://localhost:5001/Example.jfif", "text": "Test2 Test2 Test2 ", "shapes": [{ "type": "rect", "geometry": { "x": 0.44333333333333335, "y": 0.5614035087719298, "width": 0.11, "height": 0.15037593984962405 }, "style": {} }], "context": "https://localhost:5001/" } '.replace(/'/g, "\""));
+            anno.addAnnotation(annotation3);
+
+            //var annotation4 = JSON.parse('{ "src": "https://localhost:5001/Example2.jpg", "text": "Test2 Test2 Test2 ", "shapes": [{ "type": "rect", "geometry": { "x": 0.44333333333333335, "y": 0.5614035087719298, "width": 0.11, "height": 0.15037593984962405 }, "style": {} }], "context": "https://localhost:5001/" } '.replace(/'/g, "\""));
+            //anno.addAnnotation(annotation4);
+            anno.getAnnotations().forEach(function (annotation) {
+                anno.highlightAnnotation(annotation);
+            });
+
+            
+        }
+
+        function Save() {
+            var datapost = new Array();
+            //loop all annotation
+            anno.getAnnotations().forEach(function (element) {
+                console.log(JSON.stringify(element));
+                var details = '==============================================================\n';
+                details += '\n image      : ' + element.src;
+                details += '\n comment    : ' + element.text;
+
+                var geometry = element.shapes[0].geometry;
+                var imgObj = new Image();
+                imgObj.src = element.src;
+
+                //get position and size by pixel
+                var position_x = Math.round(imgObj.width * geometry.x);
+                var position_y = Math.round(imgObj.height * geometry.y);
+                var size_width = Math.round(imgObj.width * geometry.width);
+                var size_height = Math.round(imgObj.height * geometry.height);
+
+                details += '\n position_x : ' + position_x;
+                details += '\n position_y : ' + position_y;
+                details += '\n width      : ' + size_width;
+                details += '\n height     : ' + size_height;
+
+                //console.log(details);
+
+                //add data to post
+                datapost.push({
+                    'image': element.src,
+                    'position_x': position_x,
+                    'position_y': position_y,
+                    'width': size_width,
+                    'height': size_height,
+                    'comment': element.text
+                });
+            });
+
+            //post data to the server here
+            //console.log(datapost);
+        }
+
+        $(document).ready(function () {
+            anno.addHandler('onMouseOutOfItem', function (annotation) {
+                anno.highlightAnnotation(annotation);
+            });
+            anno.addHandler('onMouseOutOfAnnotation', function (annotation) {
+                anno.highlightAnnotation(annotation);
+            });
+            var element = $("#widget").get(0); // global variable
+            var getCanvas; // global variable
+
+            $("#btnPreview").on('click', function () {
+                html2canvas(element, {
+                    onrendered: function (canvas) {
+                       // $("#previewImage").append(canvas);
+                        getCanvas = canvas;
+                    }
+                });
+            });
+
+            $("#btnDownload").on('click', function () {
+                element = $("#widget").get(0);
+                html2canvas(element, {
+                    onrendered: function (canvas) {
+                        getCanvas = canvas;
+                    }
+                });
+                var imgageData = getCanvas.toDataURL("image/png");
+                // Now browser starts downloading it instead of just showing it
+                //var newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#btnDownload").attr("download", "your_pic_name.png").attr("href", imgageData);
+            });
+
+        });
+
+    </script>
+
+
+    <div id="widget">
+        <img src="Example.jfif" class="annotatable" />
+    </div>
+    <div id="previewImage"></div>
+    <!--<img src="Example2.jpg" class="annotatable" />-->
+    <input id="Button1" type="button" value="Load" onclick="Load();" />
+    <input id="Button1" type="button" value="Save" onclick="Save();" />
+    <input id="btnPreview" type="button" value="Preview" />
+    <a id="btnDownload" href="#">Download</a>
+</body>
+</html>

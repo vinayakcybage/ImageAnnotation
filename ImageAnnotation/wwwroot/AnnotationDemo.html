@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link type="text/css" rel="stylesheet" href="css/annotorious.css" />
+    <script type="text/javascript" src="js/annotorious.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+    <link type="text/css" href="css/video-js.min.css" rel="stylesheet">
+    <script type="text/javascript" src="js/video.min.js"></script>
+    <title></title>
+    <script type="text/javascript">
+        var getcanvas;
+
+        $(document).ready(function () {
+
+            $("#btnDownload").on('click', function () {
+
+                ShowAllAnnotations();
+
+                var element = $("#widget");
+                var sourceImage = $("#widget").find("img");
+                var imgFileName = sourceImage.attr("src");
+                var imgHeight = sourceImage.height();
+                var imgWidth = sourceImage.width();
+
+                html2canvas(element, {
+                    onrendered: function (canvas) {
+                        var extra_canvas = document.createElement("canvas");
+                        extra_canvas.setAttribute('width', imgWidth);
+                        extra_canvas.setAttribute('height', imgHeight);
+                        var ctx = extra_canvas.getContext('2d');
+                        ctx.drawImage(canvas, 0, 0, imgWidth, imgHeight, 0, 0, imgWidth, imgHeight);
+
+                        if (extra_canvas.msToBlob) { //for IE
+                            var blob = extra_canvas.msToBlob();
+                            window.navigator.msSaveBlob(blob, imgFileName);
+                        } else {
+                            //var imgageData = extra_canvas.toDataURL("image/png");
+                            //var link = document.createElement('a');
+                            //link.download = 'asa.png';
+                            //link.href = imgageData;
+                            //link.click();
+
+                            var a = $("<a>").attr("href", extra_canvas.toDataURL('image/png'))
+                                .attr("download", imgFileName)
+                                .appendTo("body");
+                            a[0].click();
+                            a.remove();
+                        }
+                    }
+                });
+                RemoveAllAnnotations();
+            });
+
+
+        });
+
+
+        function ShowAllAnnotations() {
+
+            var element = $("#widget");
+
+            anno.getAnnotations().forEach(function (element1) {
+
+                var geometry = element1.shapes[0].geometry;
+                var filename = element1.src.replace(/^.*[\\\/]/, '');
+                var imgObj = new Image();
+                imgObj.src = element1.src;
+
+                //get position and size by pixel
+                var size_width = Math.round(imgObj.width * geometry.width);
+                var size_height = Math.round(imgObj.height * geometry.height);
+                var position_x = Math.round(imgObj.width * geometry.x);
+                var position_y = Math.round(imgObj.height * geometry.y) + size_height + 10;
+
+                var DOMURL = window.URL || window.webkitURL || window;
+
+                var div1 = document.createElement('div');
+                div1.setAttribute('class', 'remove');
+                div1.setAttribute('style', 'top:' + position_y + 'px; left:' + (position_x + 10) + 'px; position:absolute;z-index:1;opacity:1;pointer-events:none;line-height:135%;font-family:Arial,Verdana,Sans;font-size:12px;color:#000;background-color:#fff;border:1px solid #ccc;padding: 5px 5px;word-wrap:break-word;width:180px;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-khtml-border-radius:3px;-moz-box-shadow:0px 5px 15px #111;-webkit-box-shadow:0px 5px 15px #111;box-shadow:0px 5px 15px #111;-moz-transition-property:opacity;-moz-transition-duration:0.5s;-moz-transition-delay:0s;-webkit-transition-property:opacity;-webkit-transition-duration:0.5s;-webkit-transition-delay:0s;-o-transition-property:opacity;-o-transition-duration:0.5s;-o-transition-delay:0s;transition-property:opacity;transition-duration:0.5s;transition-delay:0s;');
+                div1.innerHTML = '<span style="display:block;z-index:99;font-family:Verdana,Arial;opacity:1;font-size:12px;color:#000;text-shadow:none;line-height:150%;">' + element1.text + '</span>';
+                $('#widget').append(div1);
+                //document.body.appendChild(div1)
+
+            });
+
+        }
+
+
+        function RemoveAllAnnotations() {
+            $("div.remove").remove();
+        }
+
+
+        function Load() {
+            var annotation1 = JSON.parse('{"src":"https://localhost:5001/Example.jfif","text":"qqq","shapes":[{"type":"rect","geometry":{"x":0.146875,"y":0.165,"width":0.071875,"height":0.1075},"style":{}}],"context":"https://localhost:5001/AnnotationDemo.html"}');
+            //var annotation1 = JSON.parse('{"src":"file:///D:/Examples/ImageAnnotation/ImageAnnotation/wwwroot/Example.jfif","text":"qqq","shapes":[{"type":"rect","geometry":{"x":0.146875,"y":0.165,"width":0.071875,"height":0.1075},"style":{}}],"context":"file:///D:/Examples/ImageAnnotation/ImageAnnotation/wwwroot/AnnotationDemo.html"}');
+            anno.addAnnotation(annotation1);
+
+            var annotation2 = JSON.parse('{"src":"https://localhost:5001/Example.jfif","text":"wwww","shapes":[{"type":"rect","geometry":{"x":0.334375,"y":0.3125,"width":0.0609375,"height":0.1225},"style":{}}],"context":"https://localhost:5001/AnnotationDemo.html"}');
+            //var annotation2 = JSON.parse('{"src":"file:///D:/Examples/ImageAnnotation/ImageAnnotation/wwwroot/Example.jfif","text":"wwww","shapes":[{"type":"rect","geometry":{"x":0.334375,"y":0.3125,"width":0.0609375,"height":0.1225},"style":{}}],"context":"file:///D:/Examples/ImageAnnotation/ImageAnnotation/wwwroot/AnnotationDemo.html"}');
+            anno.addAnnotation(annotation2);
+        }
+
+
+        function Save() {
+            var datapost = new Array();
+            //loop all annotation
+            anno.getAnnotations().forEach(function (element) {
+                console.log(JSON.stringify(element));
+            });
+        }
+        (function () {
+            "use strict";
+
+            var video, $output;
+            var scale = 0.25;
+
+            var initialize = function () {
+                $output = $("#output");
+                video = $("#example_video_1").get(0);
+                $("#capture").click(captureImage);
+                $("#start").click(startVideo);
+            };
+
+            var captureImage = function () {
+                console.log(video.currentTime);
+                var canvas = document.createElement("canvas");
+                canvas.width = video.videoWidth * scale;
+                canvas.height = video.videoHeight * scale;
+                canvas.getContext('2d')
+                    .drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                var img = document.createElement("img");
+                img.src = canvas.toDataURL();
+                img.setAttribute("currentTime", video.currentTime);
+                $output.prepend(img);
+            };
+
+            var startVideo = function () {
+                video.currentTime = 2;
+                video.startVideo();
+            }
+
+            $(initialize);
+
+        }());
+    </script>
+</head>
+<body>
+    <div id="widget">
+        <img src="Example.jfif" class="annotatable" />
+    </div>
+    <input id="btnLoad" type="button" value="Load" onclick="Load();" />
+    <input id="btnSave" type="button" value="Save" onclick="Save();" />
+    <input id="btnDownload1" type="button" value="ShowAll" onclick="ShowAllAnnotations();" />
+    <input id="btnDownload1" type="button" value="RemoveAll" onclick="RemoveAllAnnotations();" />
+    <a id="btnDownload" href="#">Download</a>
+    <div id="previewImage">
+    </div>
+    <video id="example_video_1" class="video-js" controls preload="none" width="640" height="264" data-setup="{}">
+        <source src="http://amstestaccount001.streaming.mediaservices.windows.net/ebf733c4-3e2e-4a68-b67b-cc5159d1d7f2/BigBuckBunny.ism" type='video/mp4'>
+        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+    </video>
+    <button id="capture">Capture</button>
+    <button id="start">start</button>
+
+    <div id="output"></div>
+
+    <link rel="stylesheet" type="text/css" href="http://vjs.zencdn.net/5.19.2/video-js.css">
+    <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls></video>
+    <script src="http://vjs.zencdn.net/5.19.2/video.js"></script>
+    <!-- Dash.js -->
+    <script src="http://cdn.dashjs.org/latest/dash.all.min.js"></script>
+
+    <!-- videojs-contrib-dash script -->
+    <script src="videojs-dash.js"></script>
+
+    <script>
+        var player = videojs('example-video');
+
+        player.ready(function () {
+            player.src({
+                src: 'http://trailersbook.streaming.mediaservices.windows.net/0c6e02c5-0a78-457f-9528-21d347f8d784/1495798035_video.ism/manifest(format=mpd-time-csf)',
+                type: 'application/dash+xml'
+            });
+
+            player.play();
+        });
+    </script>
+
+
+</body>
+</html>

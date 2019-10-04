@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link type="text/css" rel="stylesheet" href="css/annotorious.css" />
+    <script type="text/javascript" src="js/annotorious.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+    <title></title>
+    <script type="text/javascript">
+        var getcanvas;
+
+        $(document).ready(function () {
+
+            $("#btnDownload").on('click', function () {
+
+                html2canvas($("#widget"), {
+                    onrendered: function (canvas) {
+                        // debugger;
+                        if (canvas.msToBlob) { //for IE
+                            var blob = canvas.msToBlob();
+                            window.navigator.msSaveBlob(blob, 'CAR.png');
+                        }
+                        else {
+                            var url = canvas.toDataURL('image/png', 1.0);// Other broswers except IE
+                            $("<a>", {
+                                href: url,
+                                download: "CAR.png"
+                            })
+                                .on("click", function () { $(this).remove() })
+                                .appendTo("body")[0].click()
+
+                        }
+                       
+                    }
+                })
+
+                var element = $("#widget");
+                html2canvas(element, {
+                    onrendered: function (canvas) {
+
+                        //const canvas = document.getElementById('my-house');
+                        const ctx = canvas.getContext('2d');
+                        var annoCount = anno.getAnnotations().length;
+
+                        anno.getAnnotations().forEach(function (element1) {
+
+                            var geometry = element1.shapes[0].geometry;
+                            var filename = element1.src.replace(/^.*[\\\/]/, '');
+                            var imgObj = new Image();
+                            imgObj.src = element1.src;
+
+
+                            //get position and size by pixel
+                            var size_width = Math.round(imgObj.width * geometry.width);
+                            var size_height = Math.round(imgObj.height * geometry.height);
+                            var position_x = Math.round(imgObj.width * geometry.x);
+                            var position_y = Math.round(imgObj.height * geometry.y) + size_height + 10;
+
+
+                            var data = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">' +
+                                '<foreignObject width="100%" height="100%">' +
+                                '<div xmlns="http://www.w3.org/1999/xhtml" style="position:absolute;z-index:1;opacity:1;pointer-events:none;line-height:135%;font-family:Arial,Verdana,Sans;font-size:12px;color:#000;background-color:#fff;border:1px solid #ccc;padding: 5px 5px;word-wrap:break-word;width:180px;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-khtml-border-radius:3px;-moz-box-shadow:0px 5px 15px #111;-webkit-box-shadow:0px 5px 15px #111;box-shadow:0px 5px 15px #111;-moz-transition-property:opacity;-moz-transition-duration:0.5s;-moz-transition-delay:0s;-webkit-transition-property:opacity;-webkit-transition-duration:0.5s;-webkit-transition-delay:0s;-o-transition-property:opacity;-o-transition-duration:0.5s;-o-transition-delay:0s;transition-property:opacity;transition-duration:0.5s;transition-delay:0s;">' +
+                                '<span style="display:block;padding:5px;z-index:99;font-family:Verdana,Arial;opacity:1;font-size:12px;color:#000;text-shadow:none;line-height:150%;">' + element1.text + '</span>' +
+                                '</div>' +
+                                '</foreignObject>' +
+                                '</svg>';
+
+
+                            var img = new Image();
+                            img.crossOrigin = 'anonymous';
+                            img.onload = function () {
+
+                                annoCount = annoCount - 1;
+
+                                ctx.drawImage(img, position_x, position_y);
+
+                               
+
+                                
+                                var imgageData = canvas.toDataURL("image/png");
+                                getcanvas = canvas;
+
+
+                                if (annoCount == 0) {
+                                    var link = document.createElement('a');
+                                    link.download = filename;
+                                    link.href = imgageData;
+                                    link.click();
+                                }
+                            }
+
+                            img.src = "data:image/svg+xml;base64," + window.btoa(data);
+                        });
+                    }
+                });
+
+            });
+        });
+
+
+
+
+        function DisplayText() {
+
+            var element = $("#widget");
+            html2canvas(element, {
+                onrendered: function (canvas) {
+
+                    //const canvas = document.getElementById('my-house');
+                    const ctx = canvas.getContext('2d');
+
+                    anno.getAnnotations().forEach(function (element1) {
+
+                        var geometry = element1.shapes[0].geometry;
+                        var filename = element1.src.replace(/^.*[\\\/]/, '');
+                        var imgObj = new Image();
+                        imgObj.src = element1.src;
+
+
+                        //get position and size by pixel
+                        var size_width = Math.round(imgObj.width * geometry.width);
+                        var size_height = Math.round(imgObj.height * geometry.height);
+                        var position_x = Math.round(imgObj.width * geometry.x);
+                        var position_y = Math.round(imgObj.height * geometry.y) + size_height + 10;
+
+
+                        var data = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">' +
+                            '<foreignObject width="100%" height="100%">' +
+                            '<div xmlns="http://www.w3.org/1999/xhtml" style="position:absolute;z-index:1;opacity:1;pointer-events:none;line-height:135%;font-family:Arial,Verdana,Sans;font-size:12px;color:#000;background-color:#fff;border:1px solid #ccc;padding: 5px 5px;word-wrap:break-word;width:180px;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-khtml-border-radius:3px;-moz-box-shadow:0px 5px 15px #111;-webkit-box-shadow:0px 5px 15px #111;box-shadow:0px 5px 15px #111;-moz-transition-property:opacity;-moz-transition-duration:0.5s;-moz-transition-delay:0s;-webkit-transition-property:opacity;-webkit-transition-duration:0.5s;-webkit-transition-delay:0s;-o-transition-property:opacity;-o-transition-duration:0.5s;-o-transition-delay:0s;transition-property:opacity;transition-duration:0.5s;transition-delay:0s;">' +
+                            '<span style="display:block;padding:5px;z-index:99;font-family:Verdana,Arial;opacity:1;font-size:12px;color:#000;text-shadow:none;line-height:150%;">' + element1.text + '</span>' +
+                            '</div>' +
+                            '</foreignObject>' +
+                            '</svg>';
+
+
+                        var DOMURL = window.URL || window.webkitURL || window;
+
+                        var img = new Image();
+                        var svg = new Blob([data], {
+                            type: 'image/svg+xml;charset=utf-8'
+                        });
+                        var url = DOMURL.createObjectURL(svg);
+
+                        img.onload = function () {
+                            ctx.drawImage(img, position_x, position_y);
+                            DOMURL.revokeObjectURL(url);
+                        }
+
+                        img.src = url;
+                    });
+                    $("#previewImage").append(canvas);
+
+                }
+            });
+        }
+
+        function Load() {
+            var annotation1 = JSON.parse('{"src":"https://localhost:5001/Example.jfif","text":"qqq","shapes":[{"type":"rect","geometry":{"x":0.146875,"y":0.165,"width":0.071875,"height":0.1075},"style":{}}],"context":"https://localhost:5001/AnnotationDemo.html"}');
+            //var annotation1 = JSON.parse('{"src":"file:///D:/Examples/ImageAnnotation/ImageAnnotation/wwwroot/Example.jfif","text":"qqq","shapes":[{"type":"rect","geometry":{"x":0.146875,"y":0.165,"width":0.071875,"height":0.1075},"style":{}}],"context":"file:///D:/Examples/ImageAnnotation/ImageAnnotation/wwwroot/AnnotationDemo.html"}');
+            anno.addAnnotation(annotation1);
+
+            var annotation2 = JSON.parse('{"src":"https://localhost:5001/Example.jfif","text":"wwww","shapes":[{"type":"rect","geometry":{"x":0.334375,"y":0.3125,"width":0.0609375,"height":0.1225},"style":{}}],"context":"https://localhost:5001/AnnotationDemo.html"}');
+            //var annotation2 = JSON.parse('{"src":"file:///D:/Examples/ImageAnnotation/ImageAnnotation/wwwroot/Example.jfif","text":"wwww","shapes":[{"type":"rect","geometry":{"x":0.334375,"y":0.3125,"width":0.0609375,"height":0.1225},"style":{}}],"context":"file:///D:/Examples/ImageAnnotation/ImageAnnotation/wwwroot/AnnotationDemo.html"}');
+            anno.addAnnotation(annotation2);
+        }
+        function Save() {
+            var datapost = new Array();
+            //loop all annotation
+            anno.getAnnotations().forEach(function (element) {
+                console.log(JSON.stringify(element));
+                //    var details = '==============================================================\n';
+                //    details += '\n image      : ' + element.src;
+                //    details += '\n comment    : ' + element.text;
+
+                //    var geometry = element.shapes[0].geometry;
+                //    var imgObj = new Image();
+                //    imgObj.src = element.src;
+
+                //    //get position and size by pixel
+                //    var position_x = Math.round(imgObj.width * geometry.x);
+                //    var position_y = Math.round(imgObj.height * geometry.y);
+                //    var size_width = Math.round(imgObj.width * geometry.width);
+                //    var size_height = Math.round(imgObj.height * geometry.height);
+
+                //    details += '\n position_x : ' + position_x;
+                //    details += '\n position_y : ' + position_y;
+                //    details += '\n width      : ' + size_width;
+                //    details += '\n height     : ' + size_height;
+
+                //    console.log(details);
+
+                //    //add data to post
+                //    datapost.push({
+                //        'image': element.src,
+                //        'position_x': position_x,
+                //        'position_y': position_y,
+                //        'width': size_width,
+                //        'height': size_height,
+                //        'comment': element.text
+                //    });
+            });
+
+            ////post data to the server here
+            //console.log(datapost);
+        }
+
+    </script>
+</head>
+<body>
+    <div id="widget">
+        <img src="Example.jfif" class="annotatable" />
+    </div>
+    <input id="btnLoad" type="button" value="Load" onclick="Load();" />
+    <input id="btnSave" type="button" value="Save" onclick="Save();" />
+    <input id="btnDownload1" type="button" value="Preview" onclick="DisplayText();" />
+    <a id="btnDownload" href="#">Download</a>
+    <div id="previewImage">
+    </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\annotorious.css" />
+    <None Include="wwwroot\Demo.html" />
+    <None Include="wwwroot\js\annotorious.min.js" />
+    <None Include="wwwroot\video-js-7.6.3\alt\video-js-cdn.css" />
+    <None Include="wwwroot\video-js-7.6.3\alt\video-js-cdn.min.css" />
+    <None Include="wwwroot\video-js-7.6.3\alt\video.core.js" />
+    <None Include="wwwroot\video-js-7.6.3\alt\video.core.min.js" />
+    <None Include="wwwroot\video-js-7.6.3\alt\video.core.novtt.js" />
+    <None Include="wwwroot\video-js-7.6.3\alt\video.core.novtt.min.js" />
+    <None Include="wwwroot\video-js-7.6.3\alt\video.novtt.js" />
+    <None Include="wwwroot\video-js-7.6.3\alt\video.novtt.min.js" />
+    <None Include="wwwroot\video-js-7.6.3\examples\elephantsdream\captions.ar.vtt" />
+    <None Include="wwwroot\video-js-7.6.3\examples\elephantsdream\captions.en.vtt" />
+    <None Include="wwwroot\video-js-7.6.3\examples\elephantsdream\captions.ja.vtt" />
+    <None Include="wwwroot\video-js-7.6.3\examples\elephantsdream\captions.ru.vtt" />
+    <None Include="wwwroot\video-js-7.6.3\examples\elephantsdream\captions.sv.vtt" />
+    <None Include="wwwroot\video-js-7.6.3\examples\elephantsdream\chapters.en.vtt" />
+    <None Include="wwwroot\video-js-7.6.3\examples\elephantsdream\descriptions.en.vtt" />
+    <None Include="wwwroot\video-js-7.6.3\examples\elephantsdream\index.html" />
+    <None Include="wwwroot\video-js-7.6.3\examples\index.html" />
+    <None Include="wwwroot\video-js-7.6.3\examples\shared\example-captions.vtt" />
+    <None Include="wwwroot\video-js-7.6.3\examples\simple-embed\index.html" />
+    <None Include="wwwroot\video-js-7.6.3\font\VideoJS.svg" />
+    <None Include="wwwroot\video-js-7.6.3\font\VideoJS.ttf" />
+    <None Include="wwwroot\video-js-7.6.3\font\VideoJS.woff" />
+    <None Include="wwwroot\video-js-7.6.3\lang\ar.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\ba.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\bg.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\ca.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\cs.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\cy.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\da.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\de.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\el.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\en.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\es.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\fa.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\fi.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\fr.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\gd.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\gl.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\he.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\hr.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\hu.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\it.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\ja.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\ko.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\nb.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\nl.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\nn.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\oc.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\pl.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\pt-BR.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\pt-PT.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\ru.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\sk.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\sr.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\sv.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\tr.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\uk.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\vi.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\zh-CN.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\zh-Hans.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\zh-Hant.js" />
+    <None Include="wwwroot\video-js-7.6.3\lang\zh-TW.js" />
+    <None Include="wwwroot\video-js-7.6.3\video-js.css" />
+    <None Include="wwwroot\video-js-7.6.3\video-js.min.css" />
+    <None Include="wwwroot\video-js-7.6.3\video.cjs.js" />
+    <None Include="wwwroot\video-js-7.6.3\video.es.js" />
+    <None Include="wwwroot\video-js-7.6.3\video.js" />
+    <None Include="wwwroot\video-js-7.6.3\video.min.js" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Reference Include="NReco.VideoConverter">
+      <HintPath>..\..\Example-master\VideoConvertor\bin\Debug\NReco.VideoConverter.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
